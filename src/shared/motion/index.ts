@@ -1,4 +1,4 @@
 export { MotionConfig } from "motion/react";
-export { Animated } from "./Animated";
-export { BlurHeading } from "./BlurHeading";
+export { AnimateUnlessReducedMotion } from "./AnimateUnlessReducedMotion";
+export { BlurInText } from "./BlurInText";
 export { FadeIn } from "./FadeIn";

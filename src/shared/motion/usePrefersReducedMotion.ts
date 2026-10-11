@@ -1,13 +1,7 @@
-import { useSyncExternalStore } from "react";
+import { useMediaQuery } from "@/shared/hooks/useMediaQuery";
 
-const query = "(prefers-reduced-motion: reduce)";
-
-function subscribe(onChange: () => void) {
-	const media = matchMedia(query);
-	media.addEventListener("change", onChange);
-	return () => media.removeEventListener("change", onChange);
-}
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 
 export function usePrefersReducedMotion(): boolean {
-	return useSyncExternalStore(subscribe, () => matchMedia(query).matches);
+	return useMediaQuery(reducedMotionQuery);
 }

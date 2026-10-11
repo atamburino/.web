@@ -1,7 +1,7 @@
 import { Link, Outlet } from "@tanstack/react-router";
-import { ThemeToggle } from "@/shared/theme";
+import { ThemeCycleButton } from "@/shared/theme";
 
-export function AppShell() {
+export function AppLayout() {
 	return (
 		<div className="min-h-dvh">
 			<header className="border-b">
@@ -10,7 +10,7 @@ export function AppShell() {
 						Web Template
 					</Link>
 					<div className="ml-auto">
-						<ThemeToggle />
+						<ThemeCycleButton />
 					</div>
 				</nav>
 			</header>

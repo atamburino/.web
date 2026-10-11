@@ -27,7 +27,7 @@ jobs:
       - if: matrix.task == 'test'
         run: pnpm exec playwright install --with-deps chromium
       - if: matrix.task == 'api-drift'
-        run: pnpm api:gen && git diff --exit-code
+        run: pnpm api:generate && git diff --exit-code
       - if: matrix.task == 'build'
         run: pnpm build && git diff --exit-code src/routeTree.gen.ts
       - if: matrix.task != 'api-drift' && matrix.task != 'build'

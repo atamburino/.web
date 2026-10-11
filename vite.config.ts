@@ -5,7 +5,7 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
-import { commands } from "./test/commands.ts";
+import { commands } from "./test/browserCommands.ts";
 
 const src = fileURLToPath(new URL("./src", import.meta.url));
 

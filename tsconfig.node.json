@@ -10,7 +10,7 @@
 		"eslint.config.ts",
 		"template.config.ts",
 		"scripts",
-		"test/commands.ts",
+		"test/browserCommands.ts",
 		"types"
 	]
 }

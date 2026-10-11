@@ -6,21 +6,30 @@ import globals from "globals";
 import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-const vendored = ["src/shared/ui/**", "src/shared/motion/bits/**"];
+const vendored = ["src/shared/ui/**", "src/shared/motion/reactBits/**"];
 
-const restrictedImports = {
-	patterns: [
-		{ group: ["@/features/*/*"], message: "Import a feature through its index.ts." },
-		{ group: ["@tanstack/react-query"], message: "RTK Query owns server data." },
-		{
-			group: ["@/shared/api/generated/*"],
-			message: "Only a feature's api.ts and model.ts read generated code.",
-		},
-	],
+const feature = {
+	group: ["@/features/*/*"],
+	message: "Import a feature through its index.ts.",
 };
 
-const motionImports = {
-	regex: "^(motion|gsap)(/.*)?$|^@/shared/motion/bits",
+const query = {
+	group: ["@tanstack/react-query"],
+	message: "RTK Query owns server data.",
+};
+
+const generated = {
+	group: ["@/shared/api/generated/*"],
+	message: "Only a feature's api.ts and model.ts read generated code.",
+};
+
+const sample = {
+	group: ["@/shared/api/generated/sample", "@/shared/api/generated/sample/*"],
+	message: "Point this feature at the bff generated API.",
+};
+
+const motion = {
+	regex: "^(motion|gsap)(/.*)?$|^@/shared/motion/reactBits",
 	message: "Import motion through @/shared/motion.",
 };
 
@@ -65,10 +74,7 @@ export default defineConfig(
 		settings: { "better-tailwindcss": { entryPoint: "src/shared/styles/globals.css" } },
 		rules: {
 			...betterTailwind.configs["correctness-error"].rules,
-			"no-restricted-imports": [
-				"error",
-				{ patterns: [...restrictedImports.patterns, motionImports] },
-			],
+			"no-restricted-imports": ["error", { patterns: [feature, query, generated, motion] }],
 			"no-restricted-syntax": [
 				"error",
 				{ selector: "JSXAttribute[name.name='style']", message: "Style with Tailwind classes." },
@@ -94,7 +100,10 @@ export default defineConfig(
 	},
 	{
 		files: ["src/shared/motion/**"],
-		rules: { "no-restricted-imports": ["error", restrictedImports], "no-restricted-syntax": "off" },
+		rules: {
+			"no-restricted-imports": ["error", { patterns: [feature, query, generated] }],
+			"no-restricted-syntax": "off",
+		},
 	},
 	{
 		files: [
@@ -104,29 +113,14 @@ export default defineConfig(
 			"src/app/main.tsx",
 		],
 		rules: {
-			"no-restricted-imports": [
-				"error",
-				{ patterns: [...restrictedImports.patterns.slice(0, 2), motionImports] },
-			],
+			"no-restricted-imports": ["error", { patterns: [feature, query, motion] }],
 		},
 	},
 	{
 		files: ["src/features/*/api.ts", "src/features/*/model.ts"],
-		ignores: ["src/features/example/**"],
+		ignores: ["src/features/sampleItems/**"],
 		rules: {
-			"no-restricted-imports": [
-				"error",
-				{
-					patterns: [
-						...restrictedImports.patterns.slice(0, 2),
-						motionImports,
-						{
-							group: ["@/shared/api/generated/sample", "@/shared/api/generated/sample/*"],
-							message: "Point this feature at the real generated API.",
-						},
-					],
-				},
-			],
+			"no-restricted-imports": ["error", { patterns: [feature, query, motion, sample] }],
 		},
 	},
 	{

@@ -1,2 +1,2 @@
 export * from "./endpoints.gen";
-export { validatedApi as api } from "./validation.gen";
+export { validatedApi as sampleApi } from "./validation.gen";

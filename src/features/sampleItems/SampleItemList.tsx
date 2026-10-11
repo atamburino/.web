@@ -4,49 +4,49 @@ import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardContent } from "@/shared/ui/card";
 import { Skeleton } from "@/shared/ui/skeleton";
-import type { ExampleItem } from "./model";
+import type { SampleItem } from "./model";
 
-const dateFormat = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
+const mediumDateFormatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 
-export function ExampleItemList({ state }: { state: RequestState<ExampleItem[]> }) {
-	switch (state.kind) {
+export function SampleItemList({ itemsRequest }: { itemsRequest: RequestState<SampleItem[]> }) {
+	switch (itemsRequest.kind) {
 		case "loading":
 			return <Skeleton className="h-40 w-full" />;
 		case "error":
 			return (
 				<Alert variant="destructive">
 					<AlertTitle>Could not load items</AlertTitle>
-					<AlertDescription>{describeApiError(state.error)}</AlertDescription>
+					<AlertDescription>{describeApiError(itemsRequest.error)}</AlertDescription>
 				</Alert>
 			);
 		case "ready":
-			return state.data.length === 0 ? (
+			return itemsRequest.data.length === 0 ? (
 				<p className="text-muted-foreground">No items match.</p>
 			) : (
 				<ul className="flex flex-col gap-2" aria-label="Items">
-					{state.data.map((item, index) => (
+					{itemsRequest.data.map((item, staggerStep) => (
 						<li key={item.id}>
-							<FadeIn index={index}>
-								<ExampleItemRow item={item} />
+							<FadeIn staggerStep={staggerStep}>
+								<SampleItemRow item={item} />
 							</FadeIn>
 						</li>
 					))}
 				</ul>
 			);
 		default: {
-			const _exhaustive: never = state;
+			const _exhaustive: never = itemsRequest;
 			return _exhaustive;
 		}
 	}
 }
 
-function ExampleItemRow({ item }: { item: ExampleItem }) {
+function SampleItemRow({ item }: { item: SampleItem }) {
 	return (
 		<Card size="sm">
 			<CardContent className="flex items-center justify-between gap-4">
 				<span className="font-medium">{item.name}</span>
 				<span className="flex items-center gap-3 text-sm text-muted-foreground">
-					{dateFormat.format(item.createdAt)}
+					{mediumDateFormatter.format(item.createdAt)}
 					<Badge variant={item.status === "active" ? "default" : "secondary"}>{item.status}</Badge>
 				</span>
 			</CardContent>

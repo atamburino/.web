@@ -16,21 +16,21 @@ Init renames the app, points `apiUrl` at `<api-host>/openapi/v1.json`, and pulls
 | -------------------------------------------------- | ------------------------------------------------------------------ |
 | `pnpm dev`                                         | Dev server with the fake BFF (MSW)                                 |
 | `pnpm build`                                       | Production build that calls the real BFF                           |
-| `pnpm preview:standalone`                          | Builds with the fake BFF and serves it, no backend needed          |
+| `pnpm preview:with-fake-bff`                       | Builds with the fake BFF and serves it, no backend needed          |
 | `pnpm typecheck`, `pnpm lint`, `pnpm format:check` | Static checks                                                      |
 | `pnpm test`                                        | Unit tests in Node and browser tests in Chromium                   |
 | `pnpm api:pull`                                    | Fetches `apiUrl` from `template.config.ts` into `api/openapi.json` |
-| `pnpm api:gen`                                     | Regenerates hooks, zod schemas, and response validation            |
-| `pnpm new:feature <name>`                          | Copies `src/features/example` to a new feature at `/<name>`        |
+| `pnpm api:generate`                                | Regenerates hooks, zod schemas, and response validation            |
+| `pnpm new:feature <name>`                          | Copies `src/features/sampleItems` to a new feature at `/<name>`    |
 
 Run `pnpm exec playwright install chromium` once before the first `pnpm test`.
 
 ## Layout
 
-- `src/app`: store, router, providers, shell.
+- `src/app`: store, router, providers, layout.
 - `src/routes`: file-based routes that only wire features in.
-- `src/features/<name>`: one slice per feature. `example` is the reference to copy, and it is the app's index page at `/`. Replace or extend it with your app's first real screen.
+- `src/features/<name>`: one slice per feature. `sampleItems` is the reference to copy, and it is the app's index page at `/`. Replace or extend it with your app's first real screen.
 - `src/shared`: API base, generated code, UI components, theme, motion, config.
-- `src/fakeBff`: MSW handlers and schema-checked fixtures, used by dev, the standalone build, and tests.
+- `src/fakeBff`: MSW handlers and schema-checked fixtures, used by dev, the fake-BFF build, and tests.
 
 `AGENTS.md` and `.cursor/rules` hold the rules for agents and humans.

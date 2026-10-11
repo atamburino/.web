@@ -5,12 +5,12 @@ import { ThemeProvider } from "@/shared/theme";
 import type { createAppRouter } from "./router";
 import type { AppStore } from "./store";
 
-type ProvidersProps = {
+type AppProvidersProps = {
 	store: AppStore;
 	router: ReturnType<typeof createAppRouter>;
 };
 
-export function Providers({ store, router }: ProvidersProps) {
+export function AppProviders({ store, router }: AppProvidersProps) {
 	return (
 		<Provider store={store}>
 			<ThemeProvider>

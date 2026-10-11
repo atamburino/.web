@@ -1,11 +1,14 @@
 import type { ReactNode } from "react";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
-type AnimatedProps = {
+type AnimateUnlessReducedMotionProps = {
 	children: ReactNode;
 	fallback: ReactNode;
 };
 
-export function Animated({ children, fallback }: AnimatedProps) {
+export function AnimateUnlessReducedMotion({
+	children,
+	fallback,
+}: AnimateUnlessReducedMotionProps) {
 	return usePrefersReducedMotion() ? fallback : children;
 }

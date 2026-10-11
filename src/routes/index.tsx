@@ -1,20 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ExamplePage, exampleSearchSchema, prefetchExampleItems } from "@/features/example";
+import {
+	prefetchSampleItems,
+	SampleItemsPage,
+	sampleItemFiltersSchema,
+} from "@/features/sampleItems";
 
 export const Route = createFileRoute("/")({
-	validateSearch: exampleSearchSchema,
+	validateSearch: sampleItemFiltersSchema,
 	loaderDeps: ({ search }) => search,
-	loader: ({ context, deps }) => context.store.dispatch(prefetchExampleItems(deps)),
-	component: ExampleRoute,
+	loader: ({ context, deps }) => context.store.dispatch(prefetchSampleItems(deps)),
+	component: IndexRoutePage,
 });
 
-function ExampleRoute() {
-	const search = Route.useSearch();
+function IndexRoutePage() {
+	const filters = Route.useSearch();
 	const navigate = Route.useNavigate();
 	return (
-		<ExamplePage
-			search={search}
-			onSearchChange={(next) => void navigate({ search: next, replace: true })}
+		<SampleItemsPage
+			filters={filters}
+			onFiltersChange={(next) => void navigate({ search: next, replace: true })}
 		/>
 	);
 }

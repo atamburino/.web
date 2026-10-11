@@ -1,7 +1,7 @@
 import "@/shared/styles/globals.css";
 import { afterAll, afterEach, beforeAll } from "vitest";
 import { commands } from "vitest/browser";
-import { fakeBff, startFakeBff } from "@/fakeBff/browser";
+import { fakeBff, startFakeBff } from "@/fakeBff/startFakeBff";
 
 beforeAll(startFakeBff);
 

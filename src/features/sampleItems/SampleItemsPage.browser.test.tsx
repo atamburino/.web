@@ -1,6 +1,6 @@
 import { HttpResponse, http } from "msw";
 import { describe, expect, it } from "vitest";
-import { fakeBff } from "@/fakeBff/browser";
+import { fakeBff } from "@/fakeBff/startFakeBff";
 import { renderApp } from "../../../test/renderApp";
 
 describe("index route", () => {
@@ -18,14 +18,14 @@ describe("index route", () => {
 
 	it("falls back to defaults for an invalid search param", async () => {
 		const { router } = await renderApp("/?status=bogus");
-		expect(router.state.location.search).toEqual({ q: "", status: "all" });
+		expect(router.state.location.search).toEqual({ nameContains: "", status: "all" });
 	});
 
 	it("writes the search box into the URL", async () => {
 		const { screen, router } = await renderApp("/");
 		await screen.getByRole("textbox", { name: "Search items" }).fill("zod");
 		await expect.element(screen.getByText("Hand-written fetch wrappers")).not.toBeInTheDocument();
-		expect(router.state.location.search).toEqual({ q: "zod", status: "all" });
+		expect(router.state.location.search).toEqual({ nameContains: "zod", status: "all" });
 	});
 
 	it("shows a validation error when the BFF breaks the contract", async () => {
