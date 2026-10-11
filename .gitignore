@@ -1,0 +1,7 @@
+node_modules
+dist
+coverage
+*.tsbuildinfo
+.vitest-attachments
+test/__screenshots__
+.vitest

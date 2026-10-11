@@ -1,0 +1,37 @@
+---
+description: TypeScript rules from pstack (typescript-best-practices, type-system-discipline, boundary-discipline)
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# TypeScript
+
+## Types
+
+- Model variants as discriminated unions with a `kind` literal. No bags of optional fields.
+- Build the type so the illegal value cannot be constructed. Strengthen a type only where the loose one forces `!`, a cast, or a "should never happen" throw.
+- Brand primitives that could be swapped (`OrderId`, `UserId`). Brand once at the boundary with `z.string().brand<"X">()`.
+- External data is `unknown` until parsed. Never `any`.
+- Derive types from the authoritative schema: generated OpenAPI types, `z.infer`, `Pick`, `Omit`, `ReturnType`. Do not hand-write a parallel interface.
+- No `as` casts. `as const` and `satisfies` are fine. Lint enforces this.
+- Exhaust every switch over a union with `const _exhaustive: never = value;` in the default arm.
+- Narrow in this order: discriminant switch, `in`, `typeof` or `instanceof`, a type guard that really checks, never `as`.
+
+## Boundaries
+
+- Validate where data crosses in: HTTP responses (generated zod `responseSchema`), search params (`validateSearch`), env (`src/shared/config/env.ts`), `localStorage`, CLI args.
+- Inside the app, trust the types. No re-validation and no defensive null checks for values the boundary already proved.
+- Keep business logic in pure functions with no React or Redux imports. Components and hooks call them.
+- Do not leak wire types past a feature's `api.ts` and `model.ts`. Components see domain types.
+
+## Functions and files
+
+- Pass an object, not positional arguments, when a function takes two or more parameters.
+- Keep files short and single-purpose. Lint warns at 200 lines per file and 60 per function.
+- Name things so a comment is unnecessary. A comment explains a non-obvious reason, never what the next line does.
+- No `console` in `src`. Scripts may log.
+
+## Tests
+
+- Do not mock what you can run. Pure functions get unit tests in Node. Components run in real Chromium through Vitest browser mode.
+- The fake BFF (MSW) is the only fake. Its fixtures pass through the generated zod schemas.

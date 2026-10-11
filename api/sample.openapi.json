@@ -1,0 +1,42 @@
+{
+	"openapi": "3.1.0",
+	"info": { "title": "Template sample BFF", "version": "1.0.0" },
+	"paths": {
+		"/api/template-sample/items": {
+			"get": {
+				"operationId": "getTemplateSampleItems",
+				"tags": ["TemplateSample"],
+				"parameters": [
+					{ "name": "search", "in": "query", "required": false, "schema": { "type": "string" } }
+				],
+				"responses": {
+					"200": {
+						"description": "Sample items",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": { "$ref": "#/components/schemas/TemplateSampleItem" }
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"TemplateSampleItem": {
+				"type": "object",
+				"required": ["id", "name", "status", "createdAt"],
+				"properties": {
+					"id": { "type": "string", "format": "uuid" },
+					"name": { "type": "string" },
+					"status": { "type": "string", "enum": ["active", "archived"] },
+					"createdAt": { "type": "string", "format": "date-time" }
+				}
+			}
+		}
+	}
+}
