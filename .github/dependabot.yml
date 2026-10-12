@@ -7,6 +7,20 @@ updates:
     groups:
       npm:
         patterns: ["*"]
+    ignore:
+      # typescript-eslint 8.x peers on typescript >=4.8.4 <6.1.0 (8.71.1 as of
+      # 2026-10-12). A minor bump can reach 6.1 and a major bump reaches 7, both
+      # outside that range. Patch updates on 6.0.x stay open. Drop these ignores
+      # once the peer range includes the TypeScript version we want.
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
+      # @types/node tracks the Node 24 runtime pinned in .nvmrc. Major bumps
+      # (25, 26, ...) would drift from that runtime. 24.x updates stay open.
+      - dependency-name: "@types/node"
+        update-types:
+          - version-update:semver-major
   - package-ecosystem: github-actions
     directory: /
     schedule:
