@@ -1,0 +1,39 @@
+---
+description: Feature slices, API flow, state ownership, routing, and styling for this app
+globs: ["src/**", "api/**", "scripts/**"]
+alwaysApply: true
+---
+
+# Frontend architecture
+
+## Copy the reference slice
+
+`src/features/sampleItems` is the shape every feature copies, and it renders the index route `/`. Run `pnpm new:feature <name>` to clone it at `/<name>`, then point the new `api.ts` and `model.ts` at the bff generated hooks. Lint fails until you do.
+
+A feature exposes only `index.ts`. Import other features through `@/features/<name>`, never a deeper path.
+
+## Server data
+
+- RTK Query owns all server data. Do not install TanStack Query and do not copy responses into slices.
+- `pnpm api:pull` fetches the BFF spec into `api/openapi.json`. Commit it. `pnpm api:generate` regenerates `src/shared/api/generated/**`. Never edit generated files.
+- Only a feature's `api.ts` and `model.ts` import generated code. `api.ts` wraps the generated hook and returns `RequestState<DomainType>` via `toRequestState`. `model.ts` maps server items to domain types with pure functions.
+- Render `RequestState` with an exhaustive switch on `kind`. Describe errors with `describeApiError`.
+
+## Routing
+
+- TanStack Router, file-based, in `src/routes/`. Route files only wire: `validateSearch`, `loaderDeps`, `loader`, `component`.
+- The feature owns its search schema (`search.ts`). Use `.default()` and `.catch()` on every field.
+- Loaders prefetch with `context.store.dispatch(...prefetch...)`. Components still read through the hook.
+
+## State
+
+- URL state lives in search params. Server state lives in the RTK Query cache. Theme lives in `ThemeProvider`.
+- Cross-feature client state goes in a slice owned by one feature. Local UI state stays in `useState`.
+
+## Styling
+
+- Add UI components with `pnpm dlx shadcn@latest add <component>`. They land in `src/shared/ui` and the app owns them.
+- New looks are new `cva` variants in `src/shared/ui`, not class piles at the call site.
+- Merge classes with `cn` from the `cn` package.
+- Outside `src/shared/ui`, lint bans arbitrary values, raw palette colors, literal durations, and the `style` prop. Use semantic tokens from `globals.css` and `transition-fast`, `transition-base`, or `transition-slow`.
+- Motion goes through `@/shared/motion`. Wrap animations that CSS cannot stop in `<AnimateUnlessReducedMotion fallback={...}>`.

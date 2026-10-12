@@ -1,0 +1,26 @@
+name: Template smoke
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  init-and-scaffold:
+    if: github.repository == 'atamburino/.web'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm init:app --name smoke-app --title "Smoke App" --api-host http://127.0.0.1:9
+      - run: pnpm typecheck && pnpm lint && pnpm test && pnpm build
+      - run: pnpm new:feature orders
+      - run: pnpm typecheck && pnpm test
+      - name: Lint flags the copied feature until it uses the real API
+        run: "! pnpm lint"

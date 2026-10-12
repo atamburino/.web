@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [typecheck, lint, format:check, build, api-drift, test]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - if: matrix.task == 'test'
+        run: pnpm exec playwright install --with-deps chromium
+      - if: matrix.task == 'api-drift'
+        run: pnpm api:generate && git diff --exit-code
+      - if: matrix.task == 'build'
+        run: pnpm build && git diff --exit-code src/routeTree.gen.ts
+      - if: matrix.task != 'api-drift' && matrix.task != 'build'
+        run: pnpm ${{ matrix.task }}
